@@ -10,7 +10,7 @@ public class PostRequest extends RequestSender {
     public PostRequest(String proxyUrl, int proxyPort, String uri) {
         super(proxyUrl, proxyPort);
         this.post = new PostMethod(uri);
-        super.httpMethod = post;
+        super.httpMethod = this.post;
     }
 
     public void setRequestBody(NameValuePair... requestBody) {

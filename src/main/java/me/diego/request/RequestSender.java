@@ -2,6 +2,7 @@ package me.diego.request;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethodBase;
 
 import java.io.IOException;
@@ -29,9 +30,8 @@ public abstract class RequestSender {
         try {
             httpClient.executeMethod(httpMethod);
             System.out.println(httpMethod.getStatusLine());
-            System.out.println(Arrays.toString(httpMethod.getResponseHeaders()));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             httpMethod.releaseConnection();
         }
