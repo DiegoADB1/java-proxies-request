@@ -11,28 +11,31 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
-    private static final String BASE_URL = "";
-    static List<Proxy> proxies = List.of();
-    private static final AtomicInteger atomicInteger = new AtomicInteger();
+    // Just for change logger pattern
+    static {
+        System.setProperty("java.util.logging.SimpleFormatter.format",
+                "[%1$tF %1$tT] [%4$-7s] %5$s %n");
+    }
+
+    private static final String BASE_URL = "https://webhook.site/3f439cc3-8c3f-4ca8-94e5-f76bd63c9cf4";
+    static List<Proxy> proxies = List.of(
+            new Proxy("142.132.189.106", 8080),
+            new Proxy("202.8.74.9", 8080)
+    );
+    static AtomicInteger ai = new AtomicInteger();
 
     public static void main(String[] args) {
         ThreadPool threadPool = new ThreadPool(proxies.size());
 
         threadPool.runThread(() -> {
-            Proxy proxy = proxies.get(atomicInteger.getAndAccumulate(1, Integer::sum));
+            int index = ai.getAndAdd(1);
+            Proxy proxy = proxies.get(index);
             GetRequest getRequest = new GetRequest(proxy, BASE_URL);
+
+            getRequest.setRequestHeader(DefaultHeader.DEFAULT_USER_AGENT);
 
             getRequest.sendHttpRequest();
         });
-    }
-
-    public static void createGetRequest() {
-        GetRequest get = new GetRequest(proxies.get(0), BASE_URL);
-        get.setRequestHeader(
-                DefaultHeader.DEFAULT_USER_AGENT
-        );
-
-        get.sendHttpRequest();
     }
 
     public static void createPostRequest() {
